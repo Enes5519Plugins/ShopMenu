@@ -1,0 +1,16 @@
+name: ShopMenu
+main: Enes5519\ShopMenu\ShopMenu
+version: 1.0
+api: 3.0.1
+author: Enes5519
+
+commands:
+  shop:
+    description: Open shop menu
+    permission: enes5519.openshop.command
+    overloads:
+      default:
+
+permission:
+  enes5519.shopmenu.command:
+    default: true

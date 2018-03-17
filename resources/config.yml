@@ -1,0 +1,36 @@
+form-title: "Shop Menu"
+item-template: "{itemName} §8: §f{price}{monetary_unit}"
+
+messages:
+  money: "§bYour Money: §6{money}{monetary_unit}"
+  items-to-buy: "§fItems to buy: §a{item}"
+  price: "§fPrice: §6{price}{monetary_unit}"
+  amount: "Amount"
+  bought: "§aYou have bought §fx{amount} {item} §afor §f{monetary_unit}{price}"
+  not-enough-money: "§cYou do not have enough money to buy §4x{amount} {item}. §cYou are missing §4{monetary_unit}{price}."
+  inventory-full: "§cYour inventory may be full."
+
+categories:
+  weapons:
+    img-path: 'textures/items/iron_sword'
+    text: "§6Weapons"
+  armors:
+    img-url: 'http://wiki.enderio.com/images/Dark_Plate%28large%29.png'
+    text: "§bArmors"
+
+items:
+  # itemId : itemMeta : optionName : price per item count : url/path : imgpath
+  # Example : 276:0:Sword:2500:path:textures/items/diamond_sword
+  weapons:
+    - "268:0:Wooden Sword:100:path:textures/items/wood_sword"
+    - "272:0:Stone Sword:200:path:textures/items/stone_sword"
+    - "267:0:Golden Sword:300:path:textures/items/gold_sword"
+    - "283:0:Iron Sword:400:path:textures/items/iron_sword"
+    - "276:0:Diamond Sword:500:path:textures/items/diamond_sword"
+    - "261:0:Bow:600:path:textures/items/bow_standby"
+    - "262:0:Arrow:1000:path:textures/items/arrow"
+  armors:
+    - "310:0:§bDiamond Helmet:250:path:textures/items/diamond_helmet"
+    - "311:0:§bDiamond Chestplate:350:path:textures/items/diamond_chestplate"
+    - "312:0:§bDiamond Leggings:450:path:textures/items/diamond_leggings"
+    - "313:0:§bDiamond Boots:550:path:textures/items/diamond_boots"
