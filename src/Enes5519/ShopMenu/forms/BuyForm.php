@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Enes5519\ShopMenu\forms;
 
+use Enes5519\ShopMenu\lang\Lang;
 use Enes5519\ShopMenu\ShopMenu;
 use onebone\economyapi\EconomyAPI;
 use pocketmine\form\CustomForm;
@@ -36,22 +37,27 @@ class BuyForm extends CustomForm{
     protected $price;
     /** @var Config */
     protected $cfg;
+    /** @var Lang */
+    protected $lang;
+    /** @var string */
+    protected $monetaryUnit;
 
-    public function __construct(Player $player, string $title, Item $item, int $price){
+    public function __construct(Player $player, Item $item, int $price){
         $this->item = $item;
         $this->price = $price;
         $this->cfg = ShopMenu::getAPI()->getConfig();
+        $this->lang = new Lang($player);
+        $this->monetaryUnit = EconomyAPI::getInstance()->getMonetaryUnit();
 
-        parent::__construct($title, [
-            new Label(str_replace(["{money}", "{monetary_unit}"], [EconomyAPI::getInstance()->myMoney($player), EconomyAPI::getInstance()->getMonetaryUnit()], $this->cfg->getNested("messages.money"))."\n\n\n"),
-            new Label(str_replace("{item}", $title, $this->cfg->getNested("messages.items-to-buy"))),
-            new Label(str_replace(["{price}", "{monetary_unit}"], [$this->price, EconomyAPI::getInstance()->getMonetaryUnit()], $this->cfg->getNested("messages.price"))."\n\n\n"),
-            new Slider($this->cfg->getNested("messages.amount"), 1, 64)
+        parent::__construct($this->lang->translate("title.buy"), [
+            new Label(str_pad($this->lang->translate("your.money", [EconomyAPI::getInstance()->myMoney($player), $this->monetaryUnit]), 34, " ", STR_PAD_LEFT)."\n\n\n"),
+            new Label($this->lang->translate("items.to.buy", [$item->getName()])."\n".$this->lang->translate("price", [$price, $this->monetaryUnit])."\n\n"),
+            new Slider($this->lang->translate("amount"), 1, 64)
         ]);
     }
 
     public function onSubmit(Player $player) : ?Form{
-        $miktar = (int) $this->getElement(3)->getValue();
+        $miktar = (int) $this->getElement(2)->getValue();
         $ucret = $this->price * $miktar;
         $item = $this->item->setCount($miktar);
 
@@ -59,12 +65,12 @@ class BuyForm extends CustomForm{
             if(EconomyAPI::getInstance()->myMoney($player) >= $ucret){
                 EconomyAPI::getInstance()->reduceMoney($player, $ucret);
                 $player->getInventory()->addItem($item);
-                $player->sendMessage(str_replace(["{amount}", "{item}", "{price}", "{monetary_unit}"], [$miktar, $item->getName(), $this->price, EconomyAPI::getInstance()->getMonetaryUnit()], $this->cfg->getNested("messages.bought")));
+                $player->sendMessage($this->lang->translate("bought", [$miktar, $item->getName(), $ucret, $this->monetaryUnit]));
             }else{
-                $player->sendMessage(str_replace(["{amount}", "{item}", "{price}", "{monetary_unit}"], [$miktar, $item->getName(), $this->price, EconomyAPI::getInstance()->getMonetaryUnit()], $this->cfg->getNested("messages.not-enough-money")));
+                $player->sendMessage($this->lang->translate("not.enough.money", [$miktar, $item->getName()]));
             }
         }else{
-            $player->sendMessage($this->cfg->getNested("messages.inventory-full"));
+            $player->sendMessage($this->lang->translate("inventory.full"));
         }
 
         return null;

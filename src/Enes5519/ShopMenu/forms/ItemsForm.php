@@ -42,6 +42,6 @@ class ItemsForm extends MenuForm{
 
         $item = ItemFactory::get((int) $decode[0], (int) $decode[1]);
 
-        return new BuyForm($player, $decode[2], $item, intval($decode[3]));
+        return new BuyForm($player, $item, intval($decode[3]));
     }
 }

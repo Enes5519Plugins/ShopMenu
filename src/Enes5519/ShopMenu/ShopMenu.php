@@ -19,6 +19,7 @@ declare(strict_types=1);
 namespace Enes5519\ShopMenu;
 
 use Enes5519\ShopMenu\forms\ShopForm;
+use Enes5519\ShopMenu\lang\Lang;
 use onebone\economyapi\EconomyAPI;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
@@ -52,6 +53,7 @@ class ShopMenu extends PluginBase{
 
         @mkdir($this->getDataFolder());
         $this->saveDefaultConfig();
+        Lang::init();
     }
 
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
@@ -59,7 +61,7 @@ class ShopMenu extends PluginBase{
             return true;
         }
 
-        $sender->sendForm(new ShopForm());
+        $sender->sendForm(new ShopForm($sender));
 
         return true;
     }

@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace Enes5519\ShopMenu\forms;
 
+use Enes5519\ShopMenu\lang\Lang;
 use Enes5519\ShopMenu\ShopMenu;
 use onebone\economyapi\EconomyAPI;
 use pocketmine\form\Form;
@@ -31,9 +32,12 @@ class ShopForm extends MenuForm{
 
     /** @var Config */
     protected $cfg;
+    /** @var Lang */
+    protected $lang;
 
-    public function __construct(){
+    public function __construct(Player $player){
         $this->cfg = ShopMenu::getAPI()->getConfig();
+        $this->lang = new Lang($player);
 
         $options = [];
         foreach($this->cfg->get("categories", []) as $name => $data){
@@ -41,7 +45,7 @@ class ShopForm extends MenuForm{
         }
 
         parent::__construct(
-            strval($this->cfg->get("form-title", "Shop Menu")),
+            $this->lang->translate("title.categories"),
             "",
             $options
         );
@@ -62,10 +66,10 @@ class ShopForm extends MenuForm{
                 foreach($decode as $i => $value)
                     if($i >= 5) $imgPath .= $value;
 
-                $options[] = new MenuOption(str_replace(["{itemName}", "{price}", "{monetary_unit}"], [$decode[2], $decode[3], EconomyAPI::getInstance()->getMonetaryUnit()], $this->cfg->get("item-template")), new FormIcon($imgPath, $decode[4]));
+                $options[] = new MenuOption($this->lang->translate("title.item", [$decode[2], $decode[3], EconomyAPI::getInstance()->getMonetaryUnit()]), new FormIcon($imgPath, $decode[4]));
             }
 
-            return new ItemsForm($this->title, $options, $index);
+            return new ItemsForm($this->getSelectedOption()->getText(), $options, $index);
         }
 
         return null;
